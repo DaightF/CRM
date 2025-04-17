@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Главная";
+}
+<link rel="stylesheet" href="~/css/style.css" />
+<div class="container mt-4">
+    <h2 class="mb-4">Добро пожаловать в CRM-систему</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card custom-card border-primary mb-3">
+                <div class="card-header custom-card-header">Клиенты</div>
+                <div class="card-body">
+                    <h5 class="card-title">@ViewBag.ClientCount</h5>
+                    <p class="card-text">Всего клиентов</p>
+                    <a href="@Url.Action("Index", "Client")" class="btn custom-btn custom-btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card custom-card border-success mb-3">
+                <div class="card-header custom-card-header">Сделки</div>
+                <div class="card-body">
+                    <h5 class="card-title">@ViewBag.DealCount</h5>
+                    <p class="card-text">Активных сделок</p>
+                    <a href="@Url.Action("Index", "Deal")" class="btn custom-btn custom-btn-success">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card custom-card border-warning mb-3">
+                <div class="card-header custom-card-header">Напоминания</div>
+                <div class="card-body">
+                    <h5 class="card-title">@ViewBag.ReminderCount</h5>
+                    <p class="card-text">Запланированных задач</p>
+                    <a href="@Url.Action("Index", "Reminder")" class="btn custom-btn custom-btn-warning">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <h4>Быстрые действия</h4>
+        <a href="@Url.Action("Create", "Client")" class="btn custom-btn custom-btn-primary me-2">Добавить клиента</a>
+        <a href="@Url.Action("Create", "Deal")" class="btn custom-btn custom-btn-success me-2">Создать сделку</a>
+        <a href="@Url.Action("Create", "Reminder")" class="btn custom-btn custom-btn-warning">Добавить напоминание</a>
+    </div>
+</div>

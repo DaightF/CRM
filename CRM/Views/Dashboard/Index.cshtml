@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Главная панель";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-5">Добро пожаловать в нашу CRM-систему! 🎉</h1>
+        <p class="lead">Управляйте клиентами, сделками и взаимодействиями — всё под рукой!</p>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h4 class="card-title">Клиентов в системе</h4>
+                    <p class="display-6 text-primary">@Model.TotalClients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h4 class="card-title">Всего сделок</h4>
+                    <p class="display-6 text-success">@Model.TotalDeals</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="/Account/Login" class="btn btn-outline-primary btn-lg me-3">Войти</a>
+        <a href="/Account/Register" class="btn btn-primary btn-lg">Регистрация</a>
+    </div>
+</div>
+
