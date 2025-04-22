@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CRM.Domain.ViewModels
+namespace CRM.Domain.Entity
 {
-    internal class CreateDealViewModel
+    internal class Task
     {
     }
 }

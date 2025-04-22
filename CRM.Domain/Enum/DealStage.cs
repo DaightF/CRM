@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace CRM.Domain.Enum
 {
-    internal class DealStage
+    public enum DealStage
     {
+        Incoming,
+        InProduction,
+        Produced,
+        Canceled,
+        Completed
     }
 }

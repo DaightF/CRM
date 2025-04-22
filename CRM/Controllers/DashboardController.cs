@@ -1,10 +1,12 @@
 ﻿using CRM.DAL;
 using CRM.Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Controllers
 {
+
     public class DashboardController : Controller
     {
         private readonly AppDbContext _context;
@@ -24,6 +26,7 @@ namespace CRM.Controllers
 
             return View(model);
         }
+
     }
 
 }

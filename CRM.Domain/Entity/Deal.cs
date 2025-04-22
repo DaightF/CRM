@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CRM.Domain.Entity
+﻿public enum DealStage
 {
-    public class Deal
-    {
-        public int Id { get; set; }
-        public string Stage { get; set; } 
-        public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
+    Incoming,
+    InProduction,
+    Canceled,
+    Completed
+}
 
-        public int ClientId { get; set; }
-        public Client Client { get; set; }
-    }
+public class Deal
+{
+    public int Id { get; set; }
+    public string Title { get; set; }       // новое
+    public string Description { get; set; } // новое
+    public DateTime CreatedAt { get; set; } // новое
+    public DealStage Stage { get; set; }    // новое
+
+    public int Amount { get; set; }
+
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
 }

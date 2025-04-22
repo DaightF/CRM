@@ -7,6 +7,12 @@
     <title>@ViewData["Title"] - CRM</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <link href="~/css/site-background.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/digital-clock.css" />
+
+
+
 </head>
 <body class="bg-light">
     <header>
@@ -20,7 +26,7 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Главная</a>
+                            <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Главная</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Client" asp-action="Index">Клиенты</a>
@@ -28,14 +34,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Deal" asp-action="Index">Сделки</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Reminder" asp-action="Index">Напоминания</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Contact" asp-action="Index">Контакты</a>
-                        </li>
                     </ul>
-                    <span class="navbar-text text-muted">CRM-система для малого бизнеса</span>
+                    <header class="d-flex justify-content-end align-items-center p-3">
+                        <div class="me-3">
+                            <a href="/Account/Login" class="btn btn-outline-primary btn-sm me-2">Войти</a>
+                            <a href="/Account/Register" class="btn btn-primary btn-sm me-2">Регистрация</a>
+                            <a href="/Deal/Index" class="btn btn-primary btn-sm">Тест</a>
+                        </div>
+                        <label class="switch ms-3">
+                            <input type="checkbox" id="darkModeToggle" />
+                            <span class="slider"></span>
+                        </label>
+                    </header>
                 </div>
             </div>
         </nav>
@@ -54,6 +64,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/theme.js"></script>
+    <script src="~/js/digital-clock.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

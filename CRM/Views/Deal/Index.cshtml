@@ -1,0 +1,364 @@
+﻿@model DealBoardViewModel
+@using CRM.Domain.Entity
+@using System.Globalization
+
+
+@{
+    ViewData["Title"] = "Сделки";
+    var stages = Enum.GetValues(typeof(DealStage)).Cast<DealStage>();
+
+    // Цвета для каждой стадии
+    var stageColors = new Dictionary<DealStage, string>
+    {
+        { DealStage.Incoming, "#2196f3" },       // голубой
+        { DealStage.InProduction, "#ff9800" },   // оранжевый
+        { DealStage.Completed, "#9c27b0" },      // фиолетовый
+        { DealStage.Canceled, "#f44336" },       // красный
+
+    };
+}
+
+<style>
+
+    .hero-section {
+        background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+        padding: 60px 30px;
+        border-radius: 15px;
+    }
+
+    .card-title {
+        font-weight: 600;
+        font-size: 1.3rem;
+    }
+
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    .btn-lg {
+        padding: 12px 32px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
+
+    .animated-fade-in {
+        animation: fadeIn 1.2s ease-in-out;
+    }
+
+
+
+    .description-text {
+        font-size: 1.1rem;
+        color: #555;
+    }
+
+    .testimonial-box {
+        background-color: white;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+        .testimonial-box:hover {
+            transform: translateY(-5px);
+        }
+
+    .stars {
+        font-size: 1.2rem;
+        letter-spacing: 0.1rem;
+        color: #4caf50;
+    }
+
+    body.dark-mode .hero-section {
+        background: linear-gradient(135deg, #1e1e2f, #2e2e3e);
+        color: #f0f0f0;
+    }
+
+    body.dark-mode .description-text {
+        color: #ccc;
+    }
+
+    body.dark-mode .testimonial-box {
+        background-color: #2c2c3a;
+        color: #f0f0f0;
+    }
+
+    body.dark-mode .card-title,
+    body.dark-mode .card-text {
+        color: #ddd;
+    }
+
+    body.dark-mode .btn-outline-primary {
+        color: #90caf9;
+        border-color: #90caf9;
+    }
+
+        body.dark-mode .btn-outline-primary:hover {
+            background-color: #90caf9;
+            color: #000;
+        }
+
+    body.dark-mode .btn-primary {
+        background-color: #1976d2;
+        border-color: #1976d2;
+    }
+
+        body.dark-mode .btn-primary:hover {
+            background-color: #1565c0;
+        }
+
+    body.dark-mode .stats-number.text-primary {
+        color: #90caf9 !important;
+    }
+
+    body.dark-mode .stats-number.text-success {
+        color: #81c784 !important;
+    }
+
+    body.light-theme .btn-primary {
+        background-color: #fb8c00;
+        border-color: #fb8c00;
+        color: #fff;
+    }
+
+        body.light-theme .btn-primary:hover {
+            background-color: #ef6c00;
+            border-color: #ef6c00;
+        }
+
+    body.light-theme .btn-outline-primary {
+        color: #fb8c00;
+        border-color: #fb8c00;
+    }
+
+        body.light-theme .btn-outline-primary:hover {
+            background-color: #fb8c00;
+            color: white;
+        }
+
+    header {
+        background-color: transparent;
+        padding: 10px 30px;
+    }
+
+    .chart-wrapper {
+        background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .chart-wrapper {
+        background: linear-gradient(135deg, #1e1e2f, #2e2e3e);
+        border-color: #444;
+    }
+
+
+</style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Доска сделок</h2>
+    <div>
+        <span class="me-3 text-muted"><i class="fa-regular fa-clock"></i> <span id="clock"></span></span>
+    </div>
+</div>
+
+
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+    @foreach (var stage in stages)
+    {
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-white d-flex justify-content-between align-items-center"
+                     style="background-color:@stageColors[stage]"
+                     data-stage="@stage">
+
+                    <span>@stage.ToString()</span>
+                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#dealModal" data-stage="@stage">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="card-body" style="min-height: 200px; overflow-y: auto; max-height: 80vh;">
+
+                    @if (Model.DealsByStage.ContainsKey(stage))
+                    {
+                        foreach (var deal in Model.DealsByStage[stage])
+                        {
+                            <div class="card mb-2 border-start border-4" style="border-color:@stageColors[stage]">
+                                <div class="card-body p-2">
+                                    <h5 class="card-title">@deal.Title <small class="text-muted">(@deal.Amount тг)</small></h5>
+                                    <p class="card-text">@deal.Description</p>
+                                    <small class="text-muted"><i class="fa fa-user"></i> @deal.User?.UserName</small>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Нет сделок</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="chart-wrapper p-4 my-4 rounded shadow-sm">
+    <h4 class="mb-3">Статистика сделок</h4>
+    <canvas id="dealChart" height="100"></canvas>
+</div>
+
+
+
+<!-- Модальное окно для новой сделки -->
+<div class="modal fade" id="dealModal" tabindex="-1" aria-labelledby="dealModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" id="demoDealForm">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dealModalLabel">Новая сделка</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="Stage" id="dealStageInput" />
+                <div class="mb-3">
+                    <label class="form-label">Название</label>
+                    <input type="text" name="Title" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Описание</label>
+                    <textarea name="Description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Сумма</label>
+                    <input type="number" name="Amount" class="form-control" required />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Создать</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        const ctx = document.getElementById('dealChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Incoming', 'In Production', 'Completed', 'Canceled'],
+                datasets: [{
+                    label: 'Количество сделок',
+                    data: [@Model.DealsByStage[DealStage.Incoming]?.Count() ?? 0,
+        @Model.DealsByStage[DealStage.InProduction]?.Count() ?? 0,
+        @Model.DealsByStage[DealStage.Completed]?.Count() ?? 0,
+        @Model.DealsByStage[DealStage.Canceled]?.Count() ?? 0],
+                    backgroundColor: ['#2196f3', '#ff9800', '#9c27b0', '#f44336']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Устанавливаем стадию из кнопки
+        var dealModal = document.getElementById('dealModal');
+        dealModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var stage = button.getAttribute('data-stage');
+            document.getElementById('dealStageInput').value = stage;
+        });
+
+        // Часы
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const toggle = document.getElementById('darkModeToggle');
+
+        // Загрузить тему
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggle.checked = true;
+        }
+
+        toggle.addEventListener('change', function () {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        document.getElementById('demoDealForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // отменяем отправку формы
+
+            console.log('Форма отправлена');
+
+            // Получаем значения
+            const stage = document.getElementById('dealStageInput').value;
+            const title = this.querySelector('[name="Title"]').value;
+            const description = this.querySelector('[name="Description"]').value;
+            const amount = this.querySelector('[name="Amount"]').value;
+
+            const stageCardBody = document.querySelector(`.card-header[data-stage="${stage}"]`)?.parentElement.querySelector('.card-body');
+
+
+            if (stageCardBody) {
+                // Убираем "Нет сделок", если есть
+                const emptyText = stageCardBody.querySelector('p.text-muted');
+                if (emptyText) emptyText.remove();
+
+                // Получаем цвет для стадии
+                const stageColorMap = {
+                    "Incoming": "#2196f3",
+                    "InProduction": "#ff9800",
+                    "Completed": "#9c27b0",
+                    "Canceled": "#f44336"
+                };
+                const color = stageColorMap[stage] || "#ccc";
+
+                // Создаём карточку сделки
+                const dealCard = document.createElement('div');
+                dealCard.className = 'card mb-2 border-start border-4';
+                dealCard.style.borderColor = color;
+                dealCard.innerHTML = `
+                        <div class="card-body p-2">
+                            <h5 class="card-title">${title} <small class="text-muted">(${amount} тг)</small></h5>
+                            <p class="card-text">${description}</p>
+                            <small class="text-muted"><i class="fa fa-user"></i> Демонстрация</small>
+                        </div>
+                    `;
+
+                stageCardBody.appendChild(dealCard);
+            }
+
+            // Закрыть модалку
+            const modal = bootstrap.Modal.getInstance(document.getElementById('dealModal'));
+            modal.hide();
+
+            // Очистить форму
+            this.reset();
+        });
+    </script>
+}
