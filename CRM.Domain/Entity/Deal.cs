@@ -1,4 +1,7 @@
-﻿public enum DealStage
+﻿using CRM.Domain.Entity;
+using CRM.Domain.ViewModels;
+
+public enum DealStage
 {
     Incoming,
     InProduction,
@@ -9,13 +12,16 @@
 public class Deal
 {
     public int Id { get; set; }
-    public string Title { get; set; }       // новое
-    public string Description { get; set; } // новое
-    public DateTime CreatedAt { get; set; } // новое
-    public DealStage Stage { get; set; }    // новое
+    public string Title { get; set; } = null!;
+    public string? Description { get; set; }
+    public decimal Amount { get; set; }
+    public DealStage Stage { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public int Amount { get; set; }
+    public int UserId { get; set; } // текущий пользователь
+    public User User { get; set; } = null!;
 
-    public string UserId { get; set; }
-    public ApplicationUser User { get; set; }
+    public int? ReceiverId { get; set; } // пока не используется
+    public User? Receiver { get; set; }
 }
+

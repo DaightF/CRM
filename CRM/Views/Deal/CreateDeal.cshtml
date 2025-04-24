@@ -1,0 +1,15 @@
+﻿@model CRM.Domain.ViewModels.CreateDealViewModel
+
+<h2>Предложить сделку</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="ReceiverId"></label>
+        <select asp-for="ReceiverId" asp-items="Model.Clients" class="form-control"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>

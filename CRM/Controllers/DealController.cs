@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CRM.Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 public class DealController : Controller
 {
@@ -18,13 +21,11 @@ public class DealController : Controller
 
         var allStages = Enum.GetValues(typeof(DealStage)).Cast<DealStage>();
 
-        // Создаём словарь с пустыми списками для всех стадий
         var dealsByStage = allStages.ToDictionary(
             stage => stage,
             stage => new List<Deal>()
         );
 
-        // Добавляем сделки в соответствующие стадии
         foreach (var deal in deals)
         {
             dealsByStage[deal.Stage].Add(deal);
@@ -37,5 +38,50 @@ public class DealController : Controller
 
         return View(viewModel);
     }
+
+    [HttpPost]
+    public IActionResult UpdateStage(int dealId, DealStage newStage)
+    {
+        var deal = _context.Deals.FirstOrDefault(d => d.Id == dealId);
+        if (deal == null)
+        {
+            return NotFound();
+        }
+
+        deal.Stage = newStage;
+        _context.SaveChanges();
+
+        return Ok(new { success = true });
+    }
+
+    [HttpPost]
+    public IActionResult CreateFromBoard(CreateDealViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return RedirectToAction("Board");
+
+        int? userId = HttpContext.Session.GetInt32("UserId");
+        if (userId == null)
+            return RedirectToAction("Login", "Account");
+
+        var deal = new Deal
+        {
+            Title = model.Title,
+            Description = model.Description,
+            Amount = model.Amount,
+            CreatedAt = DateTime.Now,
+            Stage = model.Stage,
+            UserId = userId.Value // текущий пользователь — создатель
+        };
+
+        _context.Deals.Add(deal);
+        _context.SaveChanges();
+
+        return RedirectToAction("Index", "Deal");
+    }
+
+
+
+
 
 }

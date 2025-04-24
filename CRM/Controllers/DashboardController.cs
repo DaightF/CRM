@@ -20,7 +20,7 @@ namespace CRM.Controllers
         {
             var model = new DashboardViewModel
             {
-                TotalClients = _context.Clients.Count(),
+                TotalClients = _context.Users.Count(),
                 TotalDeals = _context.Deals.Count()
             };
 

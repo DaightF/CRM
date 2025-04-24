@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Http
 <html lang="ru">
 <head>
     <link rel="stylesheet" href="~/css/style.css" />
@@ -18,7 +19,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-4">
             <div class="container-fluid">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">CRM</a>
+                <a class="navbar-brand fw-bold" asp-controller="Dashboard" asp-action="Index">CRM</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                         aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
                     <span class="navbar-toggler-icon"></span>
@@ -29,23 +30,37 @@
                             <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Client" asp-action="Index">Клиенты</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Deal" asp-action="Index">Сделки</a>
                         </li>
                     </ul>
                     <header class="d-flex justify-content-end align-items-center p-3">
+                        @{
+                            var userId = Context.Session.GetInt32("UserId");
+
+                        }
                         <div class="me-3">
-                            <a href="/Account/Login" class="btn btn-outline-primary btn-sm me-2">Войти</a>
-                            <a href="/Account/Register" class="btn btn-primary btn-sm me-2">Регистрация</a>
-                            <a href="/Deal/Index" class="btn btn-primary btn-sm">Тест</a>
+                            @if (userId.HasValue)
+                            {
+                                <span class="me-3">
+
+                                    @ViewBag.UserEmail
+                                </span>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a href="/Account/Login" class="btn btn-outline-primary btn-sm me-2">Войти</a>
+                                <a href="/Account/Register" class="btn btn-primary btn-sm me-2">Регистрация</a>
+                            }
                         </div>
                         <label class="switch ms-3">
                             <input type="checkbox" id="darkModeToggle" />
                             <span class="slider"></span>
                         </label>
                     </header>
+
                 </div>
             </div>
         </nav>

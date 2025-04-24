@@ -165,13 +165,17 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Доска сделок</h2>
-    <div>
-        <span class="me-3 text-muted"><i class="fa-regular fa-clock"></i> <span id="clock"></span></span>
+    <div class="d-flex align-items-center">
+        <a href="@Url.Action("Create", "Deal")" class="btn btn-primary me-3">
+            <i class="fas fa-paper-plane"></i> Предложить сделку
+        </a>
+        <span class="text-muted"><i class="fa-regular fa-clock"></i> <span id="clock"></span></span>
     </div>
 </div>
 
 
 
+<!--  Без понятия для чего это, вроде что-то заполняет... Но это не точно  -->
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
     @foreach (var stage in stages)
     {
@@ -222,7 +226,7 @@
 <!-- Модальное окно для новой сделки -->
 <div class="modal fade" id="dealModal" tabindex="-1" aria-labelledby="dealModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form class="modal-content" id="demoDealForm">
+        <form asp-controller="Deal" asp-action="CreateFromBoard" method="post" class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="dealModalLabel">Новая сделка</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
