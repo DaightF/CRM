@@ -3,10 +3,10 @@ using CRM.Domain.ViewModels;
 
 public enum DealStage
 {
-    Incoming,
-    InProduction,
-    Canceled,
-    Completed
+    Incoming = 0,
+    InProduction = 1,
+    Completed = 2,
+    Canceled = 3
 }
 
 public class Deal
@@ -15,6 +15,7 @@ public class Deal
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public decimal Amount { get; set; }
+
     public DealStage Stage { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

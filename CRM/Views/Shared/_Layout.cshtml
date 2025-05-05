@@ -11,70 +11,74 @@
     <link rel="stylesheet" href="~/css/dashboard.css" />
     <link href="~/css/site-background.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/digital-clock.css" />
+    <link rel="stylesheet" href="~/font-awesome-4.7.0/css/font-awesome.min.css" />
+
 
 
 
 </head>
-<body class="bg-light">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-4">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" asp-controller="Dashboard" asp-action="Index">CRM</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                        aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Главная</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Deal" asp-action="Index">Сделки</a>
-                        </li>
-                    </ul>
-                    <header class="d-flex justify-content-end align-items-center p-3">
-                        @{
-                            var userId = Context.Session.GetInt32("UserId");
+  
+    <body class="bg-light d-flex flex-column min-vh-100">
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-4">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" asp-controller="Dashboard" asp-action="Index">CRM</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                            aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Главная</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Deal" asp-action="Index">Сделки</a>
+                            </li>
+                        </ul>
+                        <header class="d-flex justify-content-end align-items-center p-3">
+                            @{
+                                var userId = Context.Session.GetInt32("UserId");
 
-                        }
-                        <div class="me-3">
-                            @if (userId.HasValue)
-                            {
-                                <span class="me-3">
-
-                                    @ViewBag.UserEmail
-                                </span>
-                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>
-                                </form>
                             }
-                            else
-                            {
-                                <a href="/Account/Login" class="btn btn-outline-primary btn-sm me-2">Войти</a>
-                                <a href="/Account/Register" class="btn btn-primary btn-sm me-2">Регистрация</a>
-                            }
-                        </div>
-                        <label class="switch ms-3">
-                            <input type="checkbox" id="darkModeToggle" />
-                            <span class="slider"></span>
-                        </label>
-                    </header>
+                            <div class="me-3">
+                                @if (userId.HasValue)
+                                {
+                                    <span class="me-3">
 
+                                        @ViewBag.UserEmail
+                                    </span>
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a href="/Account/Login" class="btn btn-outline-primary btn-sm me-2">Войти</a>
+                                    <a href="/Account/Register" class="btn btn-primary btn-sm me-2">Регистрация</a>
+                                }
+                            </div>
+                            <label class="switch ms-3">
+                                <input type="checkbox" id="darkModeToggle" />
+                                <span class="slider"></span>
+                            </label>
+                        </header>
+
+                    </div>
                 </div>
+            </nav>
+        </header>
+
+        <main class="container mb-5 flex-grow-1">
+            @RenderBody()
+        </main>
+
+        <footer class="border-top py-3 bg-white text-center text-muted">
+            <div class="container">
+                &copy; @DateTime.Now.Year - CRM-система
             </div>
-        </nav>
-    </header>
+        </footer>
 
-    <main class="container mb-5">
-        @RenderBody()
-    </main>
-
-    <footer class="border-top py-3 bg-white text-center text-muted">
-        <div class="container">
-            &copy; @DateTime.Now.Year - CRM-система
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

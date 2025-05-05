@@ -4,84 +4,19 @@
 }
 
 <style>
-
-    .hero-section {
-        background: linear-gradient(135deg, #e3f2fd, #fce4ec);
-        padding: 60px 30px;
-        border-radius: 15px;
-    }
-
-    .card-title {
-        font-weight: 600;
-        font-size: 1.3rem;
-    }
-
-    .stats-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-    }
-
-    .btn-lg {
-        padding: 12px 32px;
-        font-size: 1.1rem;
-        border-radius: 8px;
-    }
-
+   
     .animated-fade-in {
-        animation: fadeIn 1.2s ease-in-out;
+        animation: fadeIn 0.8s ease-in-out;
     }
 
-
-
-    .description-text {
-        font-size: 1.1rem;
-        color: #555;
+    input:focus {
+        outline: none;
+        border: 2px solid #faac52 !important;
+        box-shadow: 0 0 10px 3px rgba(247, 136, 7, 0.75) !important;
+        transition: all 0.3s ease !important;
+        background-color: #f5ca98 !important;
     }
 
-    .testimonial-box {
-        background-color: white;
-        border-radius: 10px;
-        transition: transform 0.3s ease;
-    }
-
-        .testimonial-box:hover {
-            transform: translateY(-5px);
-        }
-
-    .stars {
-        font-size: 1.2rem;
-        letter-spacing: 0.1rem;
-        color: #4caf50;
-    }
-
-    body.dark-mode .hero-section {
-        background: linear-gradient(135deg, #1e1e2f, #2e2e3e);
-        color: #f0f0f0;
-    }
-
-    body.dark-mode .description-text {
-        color: #ccc;
-    }
-
-    body.dark-mode .testimonial-box {
-        background-color: #2c2c3a;
-        color: #f0f0f0;
-    }
-
-    body.dark-mode .card-title,
-    body.dark-mode .card-text {
-        color: #ddd;
-    }
-
-    body.dark-mode .btn-outline-primary {
-        color: #90caf9;
-        border-color: #90caf9;
-    }
-
-        body.dark-mode .btn-outline-primary:hover {
-            background-color: #90caf9;
-            color: #000;
-        }
 
     body.dark-mode .btn-primary {
         background-color: #1976d2;
@@ -91,14 +26,6 @@
         body.dark-mode .btn-primary:hover {
             background-color: #1565c0;
         }
-
-    body.dark-mode .stats-number.text-primary {
-        color: #90caf9 !important;
-    }
-
-    body.dark-mode .stats-number.text-success {
-        color: #81c784 !important;
-    }
 
     body.light-theme .btn-primary {
         background-color: #fb8c00;
@@ -111,47 +38,103 @@
             border-color: #ef6c00;
         }
 
-    body.light-theme .btn-outline-primary {
-        color: #fb8c00;
-        border-color: #fb8c00;
+    .flowtext {
+        background: linear-gradient(90deg, #8000b3, #ff6600, #cc0033, #0033cc, #8000b3);
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textflow 5s linear infinite;
+        font-weight: 900;
+        font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+        font-size: 4rem;
+
+
+    }
+    @@keyframes textflow {
+        from {background-position: 0% center}         
+        to {background-position: 200% center}
     }
 
-        body.light-theme .btn-outline-primary:hover {
-            background-color: #fb8c00;
-            color: white;
-        }
-
-    header {
-        background-color: transparent;
-        padding: 10px 30px;
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+        padding: 40px;
+        flex-wrap: wrap;
     }
 
+    .info-box {
+        flex: 1 1 300px;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.8);
+        border-left: 5px solid #fb8c00;
+        border-radius: 10px;
+        color: #333;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
 
-
+    .form-box {
+        flex: 1 1 400px;
+        max-width: 500px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    }
+    
 </style>
+
 
 <div class="bg"></div>
 <div class="bg bg2"></div>
 <div class="bg bg3"></div>
 
 
-<h2>@ViewData["Title"]</h2>
+<div class="auth-container d-flex">
+    <!-- Левая часть: информация о CRM -->
+    <div class="info-box p-4">
+        <h2>О системе CRM</h2>
+        <p>
+            Наша CRM помогает управлять клиентами, следить за задачами, анализировать продажи
+            и автоматизировать бизнес-процессы. Удобный интерфейс, адаптивный дизайн
+            и мощная аналитика — всё в одном месте.
+        </p>
+    </div>
+    <!-- Правая часть: форма входа -->
+    <div class="form-box p-4">
+        <h1 class="flowtext">Регистрация</h1>
+        <form asp-action="Register" method="post">
+            <div class="form-group">    
+                <span class="fa-stack">
+                    <i class="fa fa-envelope fa-stack-1x" style="color: orange;"></i> <
+                    <i class="fa fa-envelope-o fa-stack-1x" style="color: black;"></i> 
+                </span>     
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="fa-stack">
+                    <i class="fa fa-lock fa-stack-1x" style="color: orange;"></i>
+                    <i class="fa fa-lock fa-stack-1x" style="color: black;"></i>
+                </span>
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="fa-stack">
+                    <i class="fa fa-lock fa-stack-1x" style="color: orange;"></i>
+                    <i class="fa fa-lock fa-stack-1x" style="color: black;"></i>
+                </span>
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Зарегистрироваться</button>
+        </form>
+    </div>
+ 
+</div>
 
-<form asp-action="Register" method="post">
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-success mt-3">Зарегистрироваться</button>
-</form>

@@ -153,7 +153,6 @@
         border-color: #444;
     }
 
-
 </style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 
@@ -195,16 +194,29 @@
 
                     @if (Model.DealsByStage.ContainsKey(stage))
                     {
-                        foreach (var deal in Model.DealsByStage[stage])
+                        @if (Model.DealsByStage.ContainsKey(stage))
                         {
-                            <div class="card mb-2 border-start border-4" style="border-color:@stageColors[stage]">
-                                <div class="card-body p-2">
-                                    <h5 class="card-title">@deal.Title <small class="text-muted">(@deal.Amount тг)</small></h5>
-                                    <p class="card-text">@deal.Description</p>
-                                    <small class="text-muted"><i class="fa fa-user"></i> @deal.User?.UserName</small>
+                            foreach (var deal in Model.DealsByStage[stage])
+                            {
+                                <div class="card mb-2 border-start border-4" style="border-color:@stageColors[stage]">
+                                    <div class="card-body p-2">
+                                        <h5 class="card-title">@deal.Title <small class="text-muted">(@deal.Amount тг)</small></h5>
+                                        <p class="card-text">@deal.Description</p>
+                                        <small class="text-muted"><i class="fa fa-user"></i> @deal.User?.UserName</small>
+                                        <div class="mt-2">
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#changeStageModal"
+                                                    data-dealid="@deal.Id"
+                                                    data-currentstage="@deal.Stage">
+                                                Изменить стадию
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
+
                     }
                     else
                     {
@@ -213,13 +225,19 @@
                 </div>
             </div>
         </div>
+
     }
 </div>
 
+
+
+
+<!-- Статистика -->
 <div class="chart-wrapper p-4 my-4 rounded shadow-sm">
     <h4 class="mb-3">Статистика сделок</h4>
     <canvas id="dealChart" height="100"></canvas>
 </div>
+
 
 
 
@@ -254,9 +272,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="changeStageModal" tabindex="-1" aria-labelledby="changeStageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-controller="Deal" asp-action="ChangeStage" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeStageModalLabel">Изменить стадию сделки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="DealId" id="changeStageDealId" />
+                <div class="mb-3">
+                    <label for="newStage" class="form-label">Новая стадия</label>
+                    <select class="form-select" name="NewStage" id="newStage">
+                        @foreach (var stage in stages)
+                        {
+                            <option value="@((int)stage)">@stage</option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Обновить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
+        //Логика статистики
 
         const ctx = document.getElementById('dealChart').getContext('2d');
         const chart = new Chart(ctx, {
@@ -314,55 +363,16 @@
             }
         });
 
-        document.getElementById('demoDealForm').addEventListener('submit', function (e) {
-            e.preventDefault(); // отменяем отправку формы
+        
+        var changeStageModal = document.getElementById('changeStageModal');
+        changeStageModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var dealId = button.getAttribute('data-dealid');
+            var currentStage = button.getAttribute('data-currentstage');
 
-            console.log('Форма отправлена');
-
-            // Получаем значения
-            const stage = document.getElementById('dealStageInput').value;
-            const title = this.querySelector('[name="Title"]').value;
-            const description = this.querySelector('[name="Description"]').value;
-            const amount = this.querySelector('[name="Amount"]').value;
-
-            const stageCardBody = document.querySelector(`.card-header[data-stage="${stage}"]`)?.parentElement.querySelector('.card-body');
-
-
-            if (stageCardBody) {
-                // Убираем "Нет сделок", если есть
-                const emptyText = stageCardBody.querySelector('p.text-muted');
-                if (emptyText) emptyText.remove();
-
-                // Получаем цвет для стадии
-                const stageColorMap = {
-                    "Incoming": "#2196f3",
-                    "InProduction": "#ff9800",
-                    "Completed": "#9c27b0",
-                    "Canceled": "#f44336"
-                };
-                const color = stageColorMap[stage] || "#ccc";
-
-                // Создаём карточку сделки
-                const dealCard = document.createElement('div');
-                dealCard.className = 'card mb-2 border-start border-4';
-                dealCard.style.borderColor = color;
-                dealCard.innerHTML = `
-                        <div class="card-body p-2">
-                            <h5 class="card-title">${title} <small class="text-muted">(${amount} тг)</small></h5>
-                            <p class="card-text">${description}</p>
-                            <small class="text-muted"><i class="fa fa-user"></i> Демонстрация</small>
-                        </div>
-                    `;
-
-                stageCardBody.appendChild(dealCard);
-            }
-
-            // Закрыть модалку
-            const modal = bootstrap.Modal.getInstance(document.getElementById('dealModal'));
-            modal.hide();
-
-            // Очистить форму
-            this.reset();
+            document.getElementById('changeStageDealId').value = dealId;
+            document.getElementById('newStage').value = currentStage;
         });
+
     </script>
 }

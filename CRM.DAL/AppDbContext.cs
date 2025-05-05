@@ -26,6 +26,9 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(d => d.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Deal>()
+            .Property(d => d.Amount)
+            .HasPrecision(18, 2); 
 
     }
 }

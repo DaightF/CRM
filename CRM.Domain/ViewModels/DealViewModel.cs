@@ -6,3 +6,4 @@ public class DealBoardViewModel
 {
     public Dictionary<DealStage, List<Deal>> DealsByStage { get; set; }
 }
+
